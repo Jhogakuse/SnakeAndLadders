@@ -1,0 +1,229 @@
+/* Settings Screen Styles */
+
+.settings-container {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.settings-container h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+#settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Form Group */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.form-group input[type="number"] {
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-group small {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+/* Player Names Container */
+#player-names-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.player-name-input {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.player-name-input input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.player-name-input input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.player-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 60px;
+    font-size: 0.9rem;
+}
+
+/* Difficulty Options */
+.difficulty-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.radio-option {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.radio-option input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.radio-option input[type="radio"]:hover {
+    border-color: var(--primary-color);
+}
+
+.radio-option input[type="radio"]:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: inset 0 0 0 3px white;
+}
+
+.difficulty-label {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.difficulty-label strong {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.difficulty-label small {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.form-actions .btn {
+    flex: 1;
+    max-width: 300px;
+}
+
+/* Error Message */
+.error-message {
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #dc2626;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .settings-container {
+        padding: 25px;
+        border-radius: 12px;
+    }
+
+    .settings-container h1 {
+        font-size: 2rem;
+    }
+
+    .difficulty-options {
+        grid-template-columns: 1fr;
+    }
+
+    #player-names-container {
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-container {
+        padding: 20px;
+    }
+
+    .settings-container h1 {
+        font-size: 1.75rem;
+    }
+
+    .form-actions .btn {
+        padding: 10px 16px;
+    }
+}
+
+/* Scrollbar styling */
+#player-names-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+#player-names-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#player-names-container::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+#player-names-container::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}

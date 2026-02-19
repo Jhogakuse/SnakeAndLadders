@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake and Ladders Game</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/settings.css">
+    <link rel="stylesheet" href="styles/board.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Settings Screen -->
+        <div id="settings-screen" class="screen active">
+            <div class="settings-container">
+                <h1>🎲 Snake and Ladders</h1>
+                <p class="subtitle">Configure your game</p>
+
+                <form id="settings-form">
+                    <!-- Number of Players -->
+                    <div class="form-group">
+                        <label for="num-players">Number of Players:</label>
+                        <input 
+                            type="number" 
+                            id="num-players" 
+                            name="num-players" 
+                            min="1" 
+                            max="10"
+                            value="2"
+                            required
+                        >
+                        <small>Enter between 1 and 10 players</small>
+                    </div>
+
+                    <!-- Player Names -->
+                    <div class="form-group">
+                        <label>Player Names:</label>
+                        <div id="player-names-container">
+                            <!-- Dynamically populated based on number of players -->
+                        </div>
+                    </div>
+
+                    <!-- Difficulty Level -->
+                    <div class="form-group">
+                        <label>Difficulty Level:</label>
+                        <div class="difficulty-options">
+                            <label class="radio-option">
+                                <input 
+                                    type="radio" 
+                                    name="difficulty" 
+                                    value="easy"
+                                    checked
+                                >
+                                <span class="difficulty-label">
+                                    <strong>Easy</strong>
+                                    <small>30 Squares</small>
+                                </span>
+                            </label>
+                            <label class="radio-option">
+                                <input 
+                                    type="radio" 
+                                    name="difficulty" 
+                                    value="medium"
+                                >
+                                <span class="difficulty-label">
+                                    <strong>Medium</strong>
+                                    <small>50 Squares</small>
+                                </span>
+                            </label>
+                            <label class="radio-option">
+                                <input 
+                                    type="radio" 
+                                    name="difficulty" 
+                                    value="hard"
+                                >
+                                <span class="difficulty-label">
+                                    <strong>Hard</strong>
+                                    <small>100 Squares</small>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Start Game</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Game Board Screen -->
+        <div id="board-screen" class="screen">
+            <div class="board-container">
+                <div class="board-header">
+                    <h2>Snake and Ladders Board</h2>
+                    <div class="board-info">
+                        <span id="difficulty-display"></span>
+                        <span id="board-size-display"></span>
+                    </div>
+                </div>
+
+                <div class="board-content">
+                    <!-- Game Board -->
+                    <div id="game-board" class="game-board">
+                        <!-- Dynamically populated board grid -->
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="board-legend">
+                        <h3>Board Legend</h3>
+                        <div class="legend-item">
+                            <span class="legend-snake"></span>
+                            <label>Snake (Move Down)</label>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-ladder"></span>
+                            <label>Ladder (Move Up)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Controls -->
+                <div class="game-controls">
+                    <button id="back-btn" class="btn btn-secondary">Back to Settings</button>
+                    <button id="start-game-btn" class="btn btn-primary">Start Playing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/snakesAndLadders.js"></script>
+    <script src="scripts/board.js"></script>
+    <script src="scripts/players.js"></script>
+    <script src="scripts/game.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
