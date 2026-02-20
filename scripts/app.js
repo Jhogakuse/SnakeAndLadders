@@ -7,6 +7,7 @@ class SnakeAndLaddersApp {
     constructor() {
         this.settingsScreen = document.getElementById('settings-screen');
         this.boardScreen = document.getElementById('board-screen');
+        this.gameplayScreen = document.getElementById('gameplay-screen');
         this.settingsForm = document.getElementById('settings-form');
         this.numPlayersInput = document.getElementById('num-players');
         this.playerNamesContainer = document.getElementById('player-names-container');
@@ -15,6 +16,24 @@ class SnakeAndLaddersApp {
         this.boardSizeDisplay = document.getElementById('board-size-display');
         this.backBtn = document.getElementById('back-btn');
         this.startGameBtn = document.getElementById('start-game-btn');
+
+        // Gameplay elements
+        this.gameplayBoard = document.getElementById('gameplay-board');
+        this.rollDiceBtn = document.getElementById('roll-dice-btn');
+        this.diceDisplay = document.getElementById('dice-display');
+        this.currentPlayerDisplay = document.getElementById('current-player-display');
+        this.currentPlayerName = document.getElementById('current-player-name');
+        this.currentPlayerPosition = document.getElementById('current-player-position');
+        this.leaderboardList = document.getElementById('leaderboard-list');
+        this.gameLogDisplay = document.getElementById('game-log-display');
+        this.rollMessage = document.getElementById('roll-message');
+        this.winScreen = document.getElementById('win-screen');
+        this.winnerName = document.getElementById('winner-name');
+        this.winnerStats = document.getElementById('winner-stats');
+        this.restartGameBtn = document.getElementById('restart-game-btn');
+        this.playAgainBtn = document.getElementById('play-again-btn');
+        this.backHomeBtn = document.getElementById('back-home-btn');
+        this.settingsBtn = document.getElementById('settings-btn');
 
         this.init();
     }
@@ -41,12 +60,21 @@ class SnakeAndLaddersApp {
         this.backBtn.addEventListener('click', () => this.goBackToSettings());
 
         // Start game button
-        this.startGameBtn.addEventListener('click', () => this.startGame());
+        this.startGameBtn.addEventListener('click', () => this.startGameplay());
 
         // Difficulty change
         document.querySelectorAll('input[name="difficulty"]').forEach(radio => {
             radio.addEventListener('change', () => this.updateBoardDisplay());
         });
+
+        // Gameplay controls
+        this.rollDiceBtn.addEventListener('click', () => this.handleDiceRoll());
+        this.restartGameBtn.addEventListener('click', () => this.restartCurrentGame());
+        this.settingsBtn.addEventListener('click', () => this.pauseGameAndSettings());
+
+        // Win screen controls
+        this.playAgainBtn.addEventListener('click', () => this.restartCurrentGame());
+        this.backHomeBtn.addEventListener('click', () => this.goBackToSettings());
     }
 
     /**
@@ -177,12 +205,279 @@ class SnakeAndLaddersApp {
     }
 
     /**
-     * Start the actual game (Phase 2)
+     * Start the actual gameplay
+     */
+    async startGameplay() {
+        try {
+            // Initialize board for gameplay
+            const gameplayBoardDiv = this.gameplayBoard;
+            if (!gameplayBoardDiv) {
+                throw new Error('Gameplay board element not found');
+            }
+
+            // Clear and setup gameplay board
+            gameplayBoardDiv.innerHTML = '';
+            gameplayBoardDiv.className = `game-board gameplay-board ${game.difficulty}`;
+            gameplayBoardDiv.style.position = 'relative';
+
+            // Render board squares with token placeholders
+            game.board.squares.forEach(square => {
+                const squareElement = document.createElement('div');
+                squareElement.className = 'square';
+                squareElement.id = `square-${square.number}`;
+                squareElement.dataset.number = square.number;
+
+                if (square.isSnake) {
+                    squareElement.classList.add('snake');
+                } else if (square.isLadder) {
+                    squareElement.classList.add('ladder');
+                }
+
+                const numberSpan = document.createElement('span');
+                numberSpan.className = 'square-number';
+                numberSpan.textContent = square.number;
+                squareElement.appendChild(numberSpan);
+
+                // Add token placeholders for each player inside the square
+                game.playerManager.getAllPlayers().forEach(player => {
+                    const tokenDiv = document.createElement('div');
+                    tokenDiv.id = `token-player-${player.id}`;
+                    tokenDiv.className = 'player-token';
+                    tokenDiv.style.display = 'none'; // Hidden by default
+
+                    tokenDiv.innerHTML = `
+                        <div class="token-inner" style="background-color: ${player.color}">
+                            <span class="token-label">${player.name.charAt(0).toUpperCase()}</span>
+                        </div>
+                    `;
+
+                    squareElement.appendChild(tokenDiv);
+                });
+
+                gameplayBoardDiv.appendChild(squareElement);
+            });
+
+            // Initialize token manager with token references
+            tokenManager.initializeTokens(game.playerManager.getAllPlayers());
+
+            // Show tokens at starting position (square 1)
+            const startingSquare = document.getElementById('square-1');
+            if (startingSquare) {
+                game.playerManager.getAllPlayers().forEach(player => {
+                    tokenManager.showTokenAtSquare(player.id, 1);
+                });
+            }
+
+            // Switch to gameplay screen
+            this.boardScreen.classList.remove('active');
+            this.gameplayScreen.classList.add('active');
+
+            // Initialize game display
+            this.updateGameDisplay();
+            this.populateGameLog();
+
+            console.log('🎮 Gameplay started!');
+        } catch (error) {
+            this.showError(error.message);
+            console.error('Error starting gameplay:', error);
+        }
+    }
+
+    /**
+     * Handle dice roll
+     */
+    async handleDiceRoll() {
+        // Disable button during roll
+        this.rollDiceBtn.disabled = true;
+        this.rollDiceBtn.textContent = 'Rolling...';
+
+        try {
+            // Roll the dice
+            const diceValue = await dice.roll();
+            dice.setFinalDisplay(diceValue);
+
+            this.rollMessage.textContent = `Rolled: ${diceValue}`;
+
+            // Perform animated move
+            const moveResult = await game.performAnimatedMove(diceValue);
+
+            // Update display
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            if (!moveResult.hasMoved) {
+                this.rollMessage.textContent = `Cannot move beyond finish! Stay at ${moveResult.player.currentPosition}`;
+                this.rollMessage.className = 'roll-message';
+            } else if (moveResult.hasLanded) {
+                if (moveResult.movedBy === 'snake') {
+                    this.rollMessage.textContent = `🐍 Snake! Moved from ${moveResult.newPosition} to ${moveResult.finalPosition}`;
+                    this.rollMessage.className = 'roll-message snake';
+                } else {
+                    this.rollMessage.textContent = `🪜 Ladder! Climbed from ${moveResult.newPosition} to ${moveResult.finalPosition}`;
+                    this.rollMessage.className = 'roll-message ladder';
+                }
+            } else {
+                this.rollMessage.textContent = `Moved to square ${moveResult.finalPosition}`;
+                this.rollMessage.className = 'roll-message success';
+            }
+
+            // Check for winner
+            if (moveResult.isWinner) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                this.showWinScreen(moveResult.player);
+                return;
+            }
+
+            // Update game display
+            this.updateGameDisplay();
+            this.populateGameLog();
+
+            // Move to next player
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            game.nextTurn();
+            this.updateGameDisplay();
+            this.populateGameLog();
+        } catch (error) {
+            console.error('Error during dice roll:', error);
+            this.rollMessage.textContent = 'Error during move!';
+        } finally {
+            // Re-enable button
+            this.rollDiceBtn.disabled = false;
+            this.rollDiceBtn.textContent = 'ROLL DICE';
+        }
+    }
+
+    /**
+     * Update game display elements
+     */
+    updateGameDisplay() {
+        const currentPlayer = game.playerManager.getCurrentPlayer();
+        const gameState = game.getGameState();
+
+        // Update current player display
+        if (this.currentPlayerName && currentPlayer) {
+            this.currentPlayerName.textContent = currentPlayer.name;
+            this.currentPlayerName.style.color = currentPlayer.color;
+            this.currentPlayerPosition.textContent = `Position: ${currentPlayer.currentPosition}`;
+        }
+
+        // Highlight current player token
+        tokenManager.highlightPlayerToken(currentPlayer.id);
+
+        // Update leaderboard
+        this.updateLeaderboard(gameState.leaderboard);
+    }
+
+    /**
+     * Update leaderboard display
+     */
+    updateLeaderboard(leaderboard) {
+        if (!this.leaderboardList) return;
+
+        this.leaderboardList.innerHTML = '';
+        const currentPlayer = game.playerManager.getCurrentPlayer();
+
+        leaderboard.forEach((player, index) => {
+            const item = document.createElement('div');
+            item.className = 'leaderboard-item';
+            if (player.name === currentPlayer.name) {
+                item.classList.add('current');
+            }
+
+            item.innerHTML = `
+                <div class="leaderboard-rank">#${index + 1}</div>
+                <div class="player-color-dot" style="background-color: ${player.color}"></div>
+                <div class="leaderboard-name">${player.name}</div>
+                <div class="leaderboard-position">${player.position}/${game.maxSquares}</div>
+            `;
+
+            this.leaderboardList.appendChild(item);
+        });
+    }
+
+    /**
+     * Populate game log
+     */
+    populateGameLog() {
+        if (!this.gameLogDisplay) return;
+
+        const logs = game.getGameLog();
+        this.gameLogDisplay.innerHTML = '';
+
+        // Show last 10 entries
+        const recentLogs = logs.slice(-10);
+        recentLogs.forEach(log => {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = log;
+            this.gameLogDisplay.appendChild(entry);
+        });
+
+        // Scroll to bottom
+        this.gameLogDisplay.scrollTop = this.gameLogDisplay.scrollHeight;
+    }
+
+    /**
+     * Show win screen
+     */
+    showWinScreen(winner) {
+        if (this.winScreen) {
+            const stats = game.playerManager.getStatistics();
+            const winnerStats = stats.find(p => p.name === winner.name);
+
+            this.winnerName.innerHTML = `🏆 ${winner.name} 🏆`;
+            this.winnerStats.textContent = `
+                Congratulations! You reached square ${game.maxSquares}!
+                Moves taken: ${winnerStats.moveCount}
+                Final position: ${winner.currentPosition}
+            `;
+
+            this.winScreen.classList.remove('hidden');
+        }
+    }
+
+    /**
+     * Hide win screen
+     */
+    hideWinScreen() {
+        if (this.winScreen) {
+            this.winScreen.classList.add('hidden');
+        }
+    }
+
+    /**
+     * Restart current game with same players and difficulty
+     */
+    restartCurrentGame() {
+        this.hideWinScreen();
+        game.startNewRound();
+        tokenManager.reset();
+
+        // Reset dice
+        if (dice) {
+            dice.reset();
+        }
+
+        // Clear roll message
+        this.rollMessage.textContent = '';
+
+        // Restart gameplay
+        this.startGameplay();
+    }
+
+    /**
+     * Pause game and show settings
+     */
+    pauseGameAndSettings() {
+        this.gameplayScreen.classList.remove('active');
+        this.boardScreen.classList.add('active');
+    }
+
+    /**
+     * Start the game (old method - kept for backward compatibility)
      */
     startGame() {
-        alert('🎮 Game play coming in Phase 2!\n\nCurrent features:\n✅ Game setup\n✅ Board visualization\n✅ Snake & Ladder placement\n\nNext: Dice rolling, player movement, turn management');
-        console.log('Starting game...');
-        console.log('Game State:', game.getGameState());
+        alert('🎮 Starting gameplay!\n\nFeatures:\n✅ Dice rolling with animation\n✅ Player tokens on board\n✅ Snake & Ladder collision\n✅ Turn management\n✅ Win condition\n✅ Game log');
+        this.startGameplay();
     }
 
     /**

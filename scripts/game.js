@@ -172,18 +172,80 @@ class SnakeAndLaddersGame {
     }
 
     /**
-     * Reset game
+     * Execute animated player move for gameplay
      */
-    resetGame() {
-        this.state = 'setup';
-        this.board = null;
+    async performAnimatedMove(diceValue) {
+        const moveResult = this.movePlayer(diceValue);
+
+        if (!moveResult.hasMoved) {
+            return moveResult;
+        }
+
+        // Animate token movement
+        await tokenManager.moveToken(
+            moveResult.player.id,
+            moveResult.newPosition
+        );
+
+        // If snake or ladder, animate effect
+        if (moveResult.hasLanded) {
+            await tokenManager.animateSnakeLadderEffect(
+                moveResult.player.id,
+                moveResult.newPosition,
+                moveResult.finalPosition,
+                moveResult.movedBy === 'snake'
+            );
+        }
+
+        // Update token position after all animations
+        await tokenManager.moveToken(
+            moveResult.player.id,
+            moveResult.finalPosition
+        );
+
+        return moveResult;
+    }
+
+    /**
+     * Get the next player's turn
+     */
+    nextTurn() {
+        const nextPlayer = this.playerManager.nextPlayer();
+        this.logGameEvent(`${nextPlayer.name}'s turn!`);
+        return nextPlayer;
+    }
+
+    /**
+     * Get the previous player
+     */
+    previousTurn() {
+        return this.playerManager.previousPlayer();
+    }
+
+    /**
+     * End current game
+     */
+    endGame() {
+        this.state = 'finished';
+        const winner = this.playerManager.getCurrentPlayer();
+        this.logGameEvent(`🎉 Game finished! ${winner.name} is the winner!`);
+        return winner;
+    }
+
+    /**
+     * Start fresh game (keeps same players and difficulty)
+     */
+    startNewRound() {
+        this.state = 'playing';
         this.playerManager.resetAllPlayers();
         this.gameLog = [];
+        this.logGameEvent(`New round started!`);
     }
 
     /**
      * Export game state
      */
+
     toJSON() {
         return {
             state: this.state,

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/settings.css">
     <link rel="stylesheet" href="styles/board.css">
+    <link rel="stylesheet" href="styles/gameplay.css">
 </head>
 <body>
     <div id="app-container">
@@ -127,12 +128,89 @@
                 </div>
             </div>
         </div>
+
+        <!-- Gameplay Screen -->
+        <div id="gameplay-screen" class="screen">
+            <div class="gameplay-container">
+                <div class="gameplay-header">
+                    <h2>🎮 Playing Now</h2>
+                    <button id="settings-btn" class="btn btn-small">⚙️ Settings</button>
+                </div>
+
+                <div class="gameplay-content">
+                    <!-- Left: Game Board with Tokens -->
+                    <div class="gameplay-board-section">
+                        <div id="gameplay-board" class="game-board gameplay-board">
+                            <!-- Dynamically populated with tokens -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Game Info & Controls -->
+                    <div class="gameplay-sidebar">
+                        <!-- Current Player -->
+                        <div class="current-player-card">
+                            <h3>Current Player</h3>
+                            <div id="current-player-display" class="player-info">
+                                <div id="current-player-name" class="player-name">Player 1</div>
+                                <div id="current-player-position" class="player-position">Position: 0</div>
+                            </div>
+                        </div>
+
+                        <!-- Dice Section -->
+                        <div class="dice-section">
+                            <h3>🎲 Roll Dice</h3>
+                            <div id="dice-display" class="dice-display">
+                                <div class="dice-face">?</div>
+                            </div>
+                            <button id="roll-dice-btn" class="btn btn-primary btn-large">ROLL DICE</button>
+                            <div id="roll-message" class="roll-message"></div>
+                        </div>
+
+                        <!-- Leaderboard -->
+                        <div class="leaderboard">
+                            <h3>📊 Positions</h3>
+                            <div id="leaderboard-list" class="leaderboard-list">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+
+                        <!-- Game Log -->
+                        <div class="game-log">
+                            <h3>📝 Game Log</h3>
+                            <div id="game-log-display" class="game-log-display">
+                                <!-- Game events logged here -->
+                            </div>
+                        </div>
+
+                        <!-- Game Controls -->
+                        <div class="gameplay-controls">
+                            <button id="restart-game-btn" class="btn btn-secondary">🔄 Restart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Win Screen (hidden) -->
+                <div id="win-screen" class="win-screen hidden">
+                    <div class="win-content">
+                        <h2>🏆 Congratulations!</h2>
+                        <div id="winner-name" class="winner-name"></div>
+                        <p id="winner-stats" class="winner-stats"></p>
+                        <div class="win-buttons">
+                            <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+                            <button id="back-home-btn" class="btn btn-secondary">Back Home</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->
     <script src="scripts/snakesAndLadders.js"></script>
     <script src="scripts/board.js"></script>
     <script src="scripts/players.js"></script>
+    <script src="scripts/dice.js"></script>
+    <script src="scripts/tokens.js"></script>
     <script src="scripts/game.js"></script>
     <script src="scripts/app.js"></script>
 </body>
