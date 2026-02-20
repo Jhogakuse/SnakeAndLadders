@@ -337,7 +337,7 @@ class SnakeAndLaddersApp {
 
             // All moves are now valid with bounce-back logic
             if (moveResult.bouncedBack) {
-                this.rollMessage.textContent = `🔄 Bounce back! From ${moveResult.newPosition} to ${moveResult.finalPosition}`;
+                this.rollMessage.textContent = `🔄 Bounce back! From ${moveResult.wouldBePosition} to ${moveResult.finalPosition}`;
                 this.rollMessage.className = 'roll-message bounce';
             } else if (moveResult.hasLanded) {
                 if (moveResult.movedBy === 'snake') {

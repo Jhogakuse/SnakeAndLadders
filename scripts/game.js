@@ -63,6 +63,7 @@ class SnakeAndLaddersGame {
         // Handle bounce-back if moving beyond max squares
         let actualMovement = diceValue;
         let bouncedBack = false;
+        const wouldBePosition = player.currentPosition; // Track position before bounce
         
         if (newPosition > this.maxSquares) {
             // Calculate bounce-back: overshoot * 2, then go back that many squares
@@ -72,7 +73,7 @@ class SnakeAndLaddersGame {
             bouncedBack = true;
             
             this.logGameEvent(
-                `${player.name} rolled ${diceValue}, bounced back from ${this.maxSquares} to ${newPosition}`
+                `${player.name} rolled ${diceValue}, bounced back from ${wouldBePosition} to ${newPosition}`
             );
         }
 
@@ -102,6 +103,7 @@ class SnakeAndLaddersGame {
             diceValue: diceValue,
             previousPosition: player.currentPosition - diceValue,
             newPosition: newPosition,
+            wouldBePosition: wouldBePosition,
             finalPosition: finalPosition,
             hasMoved: true,
             hasLanded: destination !== null,
