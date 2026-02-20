@@ -9,14 +9,14 @@ const BOARD_CONFIG = {
         cols: 6,
         rows: 5,
         snakes: [
-            { head: 17, tail: 4 },
-            { head: 19, tail: 7 },
-            { head: 28, tail: 8 }
+            { head: 17, tail: 15 },  // 2 squares down
+            { head: 19, tail: 14 },  // 5 squares down
+            { head: 28, tail: 20 }   // 8 squares down
         ],
         ladders: [
-            { bottom: 2, top: 15 },
-            { bottom: 10, top: 25 },
-            { bottom: 20, top: 29 }
+            { bottom: 2, top: 4 },    // 2 squares up
+            { bottom: 12, top: 17 },  // 5 squares up
+            { bottom: 22, top: 30 }   // 8 squares up
         ]
     },
     medium: {
@@ -24,18 +24,18 @@ const BOARD_CONFIG = {
         cols: 10,
         rows: 5,
         snakes: [
-            { head: 17, tail: 4 },
-            { head: 25, tail: 12 },
-            { head: 35, tail: 20 },
-            { head: 48, tail: 38 },
-            { head: 30, tail: 8 }
+            { head: 17, tail: 15 },  // 2 squares down
+            { head: 25, tail: 22 },  // 3 squares down
+            { head: 35, tail: 30 },  // 5 squares down
+            { head: 48, tail: 41 },  // 7 squares down
+            { head: 30, tail: 22 }   // 8 squares down
         ],
         ladders: [
-            { bottom: 2, top: 15 },
-            { bottom: 7, top: 24 },
-            { bottom: 18, top: 31 },
-            { bottom: 37, top: 45 },
-            { bottom: 42, top: 49 }
+            { bottom: 2, top: 4 },    // 2 squares up
+            { bottom: 7, top: 10 },   // 3 squares up
+            { bottom: 18, top: 23 },  // 5 squares up
+            { bottom: 37, top: 44 },  // 7 squares up
+            { bottom: 42, top: 50 }   // 8 squares up
         ]
     },
     hard: {
@@ -43,26 +43,26 @@ const BOARD_CONFIG = {
         cols: 10,
         rows: 10,
         snakes: [
-            { head: 17, tail: 4 },
-            { head: 25, tail: 12 },
-            { head: 35, tail: 20 },
-            { head: 48, tail: 38 },
-            { head: 30, tail: 8 },
-            { head: 56, tail: 42 },
-            { head: 68, tail: 45 },
-            { head: 82, tail: 65 },
-            { head: 95, tail: 75 }
+            { head: 17, tail: 15 },  // 2 squares down
+            { head: 25, tail: 22 },  // 3 squares down
+            { head: 35, tail: 30 },  // 5 squares down
+            { head: 48, tail: 41 },  // 7 squares down
+            { head: 30, tail: 22 },  // 8 squares down
+            { head: 56, tail: 54 },  // 2 squares down
+            { head: 68, tail: 65 },  // 3 squares down
+            { head: 82, tail: 77 },  // 5 squares down
+            { head: 95, tail: 88 }   // 7 squares down
         ],
         ladders: [
-            { bottom: 2, top: 15 },
-            { bottom: 7, top: 24 },
-            { bottom: 18, top: 31 },
-            { bottom: 37, top: 50 },
-            { bottom: 42, top: 60 },
-            { bottom: 52, top: 70 },
-            { bottom: 71, tail: 80 },
-            { bottom: 84, top: 92 },
-            { bottom: 97, top: 99 }
+            { bottom: 2, top: 4 },    // 2 squares up
+            { bottom: 7, top: 10 },   // 3 squares up
+            { bottom: 18, top: 23 },  // 5 squares up
+            { bottom: 37, top: 44 },  // 7 squares up
+            { bottom: 42, top: 50 },  // 8 squares up
+            { bottom: 52, top: 54 },  // 2 squares up
+            { bottom: 71, top: 74 },  // 3 squares up
+            { bottom: 84, top: 89 },  // 5 squares up
+            { bottom: 92, top: 99 }   // 7 squares up
         ]
     }
 };
