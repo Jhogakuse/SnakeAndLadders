@@ -241,7 +241,7 @@ class SnakeAndLaddersApp {
                 // Add token placeholders for each player inside the square
                 game.playerManager.getAllPlayers().forEach(player => {
                     const tokenDiv = document.createElement('div');
-                    tokenDiv.id = `token-player-${player.id}`;
+                    tokenDiv.id = `game-board-${square.number}-${player.id}`;
                     tokenDiv.className = 'player-token';
                     tokenDiv.style.display = 'none'; // Hidden by default
 

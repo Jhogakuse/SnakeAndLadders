@@ -28,7 +28,7 @@ class TokenManager {
      * Hide all instances of a player's token
      */
     hideAllTokensOfPlayer(playerId) {
-        const tokenElements = document.querySelectorAll(`#token-player-${playerId}`);
+        const tokenElements = document.querySelectorAll(`[id$="-${playerId}"][id^="game-board-"]`);
         tokenElements.forEach(token => {
             token.style.display = 'none';
         });
@@ -41,19 +41,14 @@ class TokenManager {
         // Hide all instances of this player's token
         this.hideAllTokensOfPlayer(playerId);
 
-        // Show the token inside the target square
-        const squareElement = document.getElementById(`square-${squareNumber}`);
-        if (squareElement) {
-            const tokenElement = squareElement.querySelector(`#token-player-${playerId}`);
-            if (tokenElement) {
-                tokenElement.style.display = 'flex';
-                this.playerPositions[playerId] = squareNumber;
-                console.log(`Token ${playerId} shown at square ${squareNumber}`);
-            } else {
-                console.warn(`Token element not found in square ${squareNumber} for player ${playerId}`);
-            }
+        // Show the token with unique ID for this square and player
+        const tokenElement = document.getElementById(`game-board-${squareNumber}-${playerId}`);
+        if (tokenElement) {
+            tokenElement.style.display = 'flex';
+            this.playerPositions[playerId] = squareNumber;
+            console.log(`Token ${playerId} shown at square ${squareNumber}`);
         } else {
-            console.warn(`Square ${squareNumber} not found for showing token`);
+            console.warn(`Token element not found: game-board-${squareNumber}-${playerId}`);
         }
     }
 
@@ -93,12 +88,10 @@ class TokenManager {
             token.classList.remove('active-token');
         });
 
-        // Add highlight to current player's token
+        // Add highlight to current player's token at their current square
         const currentSquare = this.playerPositions[playerId];
         if (currentSquare) {
-            const token = document.querySelector(
-                `#square-${currentSquare} #token-player-${playerId}`
-            );
+            const token = document.getElementById(`game-board-${currentSquare}-${playerId}`);
             if (token) {
                 token.classList.add('active-token');
             }
