@@ -232,8 +232,108 @@
     border-color: #15803d;
 }
 
+/* Snake Destination Squares - Same patterns as source snakes */
+.square.snake-destination[data-snake-pair="snake-0"] {
+    background: linear-gradient(45deg, #fee2e2 25%, #fecaca 25%, #fecaca 50%, #fee2e2 50%, #fee2e2 75%, #fecaca 75%, #fecaca);
+    background-size: 10px 10px;
+    border: 2px solid #b91c1c;
+}
+
+.square.snake-destination[data-snake-pair="snake-1"] {
+    background: linear-gradient(135deg, #fee2e2 25%, transparent 25%, transparent 75%, #fee2e2 75%, #fee2e2),
+                linear-gradient(45deg, #fecaca 25%, transparent 25%, transparent 75%, #fecaca 75%, #fecaca);
+    background-size: 12px 12px;
+    background-position: 0 0, 6px 6px;
+    border: 2px solid #991b1b;
+}
+
+.square.snake-destination[data-snake-pair="snake-2"] {
+    background: repeating-linear-gradient(90deg, #fee2e2, #fee2e2 2px, #f87171 2px, #f87171 4px);
+    border: 2px solid #7f1d1d;
+}
+
+.square.snake-destination[data-snake-pair="snake-3"] {
+    background: repeating-linear-gradient(0deg, #fecaca, #fecaca 2px, #fee2e2 2px, #fee2e2 4px);
+    border: 2px solid #dc2626;
+}
+
+.square.snake-destination[data-snake-pair="snake-4"] {
+    background: radial-gradient(circle, #f87171 30%, #fecaca 70%);
+    border: 2px solid #b91c1c;
+}
+
+.square.snake-destination[data-snake-pair="snake-5"] {
+    background: linear-gradient(to right, #fee2e2 0%, #fee2e2 49%, #fecaca 50%, #fecaca 100%);
+    border: 2px solid #991b1b;
+}
+
+.square.snake-destination[data-snake-pair="snake-6"] {
+    background: conic-gradient(#f87171, #fecaca, #fee2e2, #f87171);
+    border: 2px solid #7f1d1d;
+}
+
+.square.snake-destination[data-snake-pair="snake-7"] {
+    background: repeating-linear-gradient(45deg, #fee2e2, #fee2e2 3px, #f87171 3px, #f87171 6px);
+    border: 2px solid #dc2626;
+}
+
+.square.snake-destination[data-snake-pair="snake-8"] {
+    background: repeating-linear-gradient(-45deg, #fecaca, #fecaca 3px, #fee2e2 3px, #fee2e2 6px);
+    border: 2px solid #b91c1c;
+}
+
+/* Ladder Destination Squares - Same patterns as source ladders */
+.square.ladder-destination[data-ladder-pair="ladder-0"] {
+    background: linear-gradient(45deg, #dcfce7 25%, #bbf7d0 25%, #bbf7d0 50%, #dcfce7 50%, #dcfce7 75%, #bbf7d0 75%, #bbf7d0);
+    background-size: 10px 10px;
+    border: 2px solid #15803d;
+}
+
+.square.ladder-destination[data-ladder-pair="ladder-1"] {
+    background: linear-gradient(135deg, #dcfce7 25%, transparent 25%, transparent 75%, #dcfce7 75%, #dcfce7),
+                linear-gradient(45deg, #86efac 25%, transparent 25%, transparent 75%, #86efac 75%, #86efac);
+    background-size: 12px 12px;
+    background-position: 0 0, 6px 6px;
+    border: 2px solid #166534;
+}
+
+.square.ladder-destination[data-ladder-pair="ladder-2"] {
+    background: repeating-linear-gradient(90deg, #dcfce7, #dcfce7 2px, #86efac 2px, #86efac 4px);
+    border: 2px solid #15803d;
+}
+
+.square.ladder-destination[data-ladder-pair="ladder-3"] {
+    background: repeating-linear-gradient(0deg, #86efac, #86efac 2px, #dcfce7 2px, #dcfce7 4px);
+    border: 2px solid #166534;
+}
+
+.square.ladder-destination[data-ladder-pair="ladder-4"] {
+    background: radial-gradient(circle, #86efac 30%, #dcfce7 70%);
+    border: 2px solid #16a34a;
+}
+
+.square.ladder-destination[data-ladder-pair="ladder-5"] {
+    background: linear-gradient(to right, #dcfce7 0%, #dcfce7 49%, #86efac 50%, #86efac 100%);
+    border: 2px solid #15803d;
+}
+
+.square.ladder-destination[data-ladder-pair="ladder-6"] {
+    background: conic-gradient(#86efac, #dcfce7, #bbf7d0, #86efac);
+    border: 2px solid #166534;
+}
+
+.square.ladder-destination[data-ladder-pair="ladder-7"] {
+    background: repeating-linear-gradient(45deg, #dcfce7, #dcfce7 3px, #86efac 3px, #86efac 6px);
+    border: 2px solid #16a34a;
+}
+
+.square.ladder-destination[data-ladder-pair="ladder-8"] {
+    background: repeating-linear-gradient(-45deg, #86efac, #86efac 3px, #dcfce7 3px, #dcfce7 6px);
+    border: 2px solid #15803d;
+}
+
 /* Normal Square */
-.square:not(.snake):not(.ladder) {
+.square:not(.snake):not(.ladder):not(.snake-destination):not(.ladder-destination) {
     background-color: white;
 }
 

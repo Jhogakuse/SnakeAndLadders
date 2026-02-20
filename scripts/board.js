@@ -99,6 +99,20 @@ class Board {
             const ladderPairId = this.getLadderPairId(square.number);
             squareDiv.dataset.ladderPair = ladderPairId;
             squareDiv.title = `Ladder! From ${square.number} to ${square.destination}`;
+        } else {
+            // Check if this square is a destination of a snake
+            const snakePairId = this.getSnakeTailPairId(square.number);
+            if (snakePairId) {
+                squareDiv.classList.add('snake-destination');
+                squareDiv.dataset.snakePair = snakePairId;
+            } else {
+                // Check if this square is a destination of a ladder
+                const ladderPairId = this.getLadderTopPairId(square.number);
+                if (ladderPairId) {
+                    squareDiv.classList.add('ladder-destination');
+                    squareDiv.dataset.ladderPair = ladderPairId;
+                }
+            }
         }
 
         // Add square number
@@ -133,11 +147,29 @@ class Board {
     }
 
     /**
+     * Get snake tail (destination) pair identifier
+     */
+    getSnakeTailPairId(squareNumber) {
+        const snakes = this.config.snakes;
+        const snakeIndex = snakes.findIndex(s => s.tail === squareNumber);
+        return snakeIndex >= 0 ? `snake-${snakeIndex}` : '';
+    }
+
+    /**
      * Get ladder pair identifier
      */
     getLadderPairId(squareNumber) {
         const ladders = this.config.ladders;
-        const ladderIndex = ladders.findIndex(l => l.bottom === squareNumber || l.top === squareNumber);
+        const ladderIndex = ladders.findIndex(l => l.bottom === squareNumber);
+        return ladderIndex >= 0 ? `ladder-${ladderIndex}` : '';
+    }
+
+    /**
+     * Get ladder top (destination) pair identifier
+     */
+    getLadderTopPairId(squareNumber) {
+        const ladders = this.config.ladders;
+        const ladderIndex = ladders.findIndex(l => l.top === squareNumber);
         return ladderIndex >= 0 ? `ladder-${ladderIndex}` : '';
     }
 
