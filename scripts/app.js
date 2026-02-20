@@ -335,9 +335,10 @@ class SnakeAndLaddersApp {
             // Update display
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            if (!moveResult.hasMoved) {
-                this.rollMessage.textContent = `Cannot move beyond finish! Stay at ${moveResult.player.currentPosition}`;
-                this.rollMessage.className = 'roll-message';
+            // All moves are now valid with bounce-back logic
+            if (moveResult.bouncedBack) {
+                this.rollMessage.textContent = `🔄 Bounce back! From ${moveResult.newPosition} to ${moveResult.finalPosition}`;
+                this.rollMessage.className = 'roll-message bounce';
             } else if (moveResult.hasLanded) {
                 if (moveResult.movedBy === 'snake') {
                     this.rollMessage.textContent = `🐍 Snake! Moved from ${moveResult.newPosition} to ${moveResult.finalPosition}`;

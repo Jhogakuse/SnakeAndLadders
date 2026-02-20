@@ -214,6 +214,11 @@
     font-weight: 600;
 }
 
+.roll-message.bounce {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
 /* Leaderboard */
 .leaderboard {
     background: white;

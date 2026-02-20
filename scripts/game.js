@@ -60,36 +60,37 @@ class SnakeAndLaddersGame {
 
         let newPosition = player.currentPosition + diceValue;
 
-        // Don't move beyond max squares
+        // Handle bounce-back if moving beyond max squares
+        let actualMovement = diceValue;
+        let bouncedBack = false;
+        
         if (newPosition > this.maxSquares) {
+            // Calculate bounce-back: overshoot * 2, then go back that many squares
+            const overshoot = newPosition - this.maxSquares;
+            newPosition = this.maxSquares - overshoot;
+            actualMovement = diceValue - (overshoot * 2);
+            bouncedBack = true;
+            
             this.logGameEvent(
-                `${player.name} rolled ${diceValue} but cannot move beyond ${this.maxSquares}. Stay at ${player.currentPosition}`
+                `${player.name} rolled ${diceValue}, bounced back from ${this.maxSquares} to ${newPosition}`
             );
-            return {
-                player: player,
-                diceValue: diceValue,
-                newPosition: player.currentPosition,
-                hasMoved: false,
-                hasLanded: false,
-                destination: null
-            };
         }
 
         // Check for snake or ladder
         const destination = getDestination(newPosition, this.difficulty);
         let finalPosition = newPosition;
-        let movedBy = 'dice';
+        let movedBy = bouncedBack ? 'bounce' : 'dice';
 
         if (destination) {
             finalPosition = destination;
             if (isSnakeSquare(newPosition, this.difficulty)) {
                 movedBy = 'snake';
-                this.logGameEvent(`${player.name} rolled ${diceValue}, landed on snake at ${newPosition}, moved to ${finalPosition}`);
+                this.logGameEvent(`${player.name} landed on snake at ${newPosition}, moved to ${finalPosition}`);
             } else {
                 movedBy = 'ladder';
-                this.logGameEvent(`${player.name} rolled ${diceValue}, landed on ladder at ${newPosition}, climbed to ${finalPosition}`);
+                this.logGameEvent(`${player.name} landed on ladder at ${newPosition}, climbed to ${finalPosition}`);
             }
-        } else {
+        } else if (!bouncedBack) {
             this.logGameEvent(`${player.name} rolled ${diceValue} and moved to ${finalPosition}`);
         }
 
@@ -106,6 +107,7 @@ class SnakeAndLaddersGame {
             hasLanded: destination !== null,
             movedBy: movedBy,
             destination: destination,
+            bouncedBack: bouncedBack,
             isWinner: finalPosition === this.maxSquares
         };
     }
