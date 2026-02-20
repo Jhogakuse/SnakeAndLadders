@@ -239,6 +239,11 @@ class SnakeAndLaddersGame {
         this.state = 'playing';
         this.playerManager.resetAllPlayers();
         this.gameLog = [];
+        
+        // Reinitialize board for new round
+        this.board = new Board(this.difficulty);
+        this.board.generateSquares();
+        
         this.logGameEvent(`New round started!`);
     }
 

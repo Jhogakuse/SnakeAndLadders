@@ -352,8 +352,10 @@ class SnakeAndLaddersApp {
             }
 
             // Check for winner
-            if (moveResult.isWinner) {
+            console.log(`Winner check - Final Position: ${moveResult.finalPosition}, Max Squares: ${game.maxSquares}, isWinner: ${moveResult.isWinner}`);
+            if (moveResult.isWinner || moveResult.finalPosition === game.maxSquares) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
+                console.log(`🏆 Winner detected: ${moveResult.player.name}!`);
                 this.showWinScreen(moveResult.player);
                 return;
             }

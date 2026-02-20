@@ -14,9 +14,9 @@ const BOARD_CONFIG = {
             { head: 28, tail: 20 }   // 8 squares down
         ],
         ladders: [
-            { bottom: 2, top: 4 },    // 2 squares up
-            { bottom: 12, top: 17 },  // 5 squares up
-            { bottom: 22, top: 30 }   // 8 squares up
+            { bottom: 2, top: 10 },    // 8 squares up
+            { bottom: 12, top: 16 },  // 5 squares up
+            { bottom: 22, top: 29 }   // 8 squares up
         ]
     },
     medium: {
