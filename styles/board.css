@@ -47,7 +47,6 @@
     padding: 10px;
     /* border: 3px solid var(--primary-color); */
     border-radius: 12px;
-    aspect-ratio: 1;
     width: 100%;
     max-width: 600px;
 }
@@ -57,9 +56,9 @@
     grid-template-columns: repeat(6, 1fr);
 }
 
-/* Medium: 10 columns (50 squares = 10x5) */
+/* Medium: 5 columns (50 squares = 5x10) */
 .game-board.medium {
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(5, 1fr);
 }
 
 /* Hard: 10 columns (100 squares = 10x10) */

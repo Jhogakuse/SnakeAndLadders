@@ -21,8 +21,8 @@ const BOARD_CONFIG = {
     },
     medium: {
         maxSquares: 50,
-        cols: 10,
-        rows: 5,
+        cols: 5,
+        rows: 10,
         snakes: [
             { head: 17, tail: 15 },  // 2 squares down
             { head: 25, tail: 22 },  // 3 squares down
