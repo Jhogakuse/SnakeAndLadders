@@ -56,9 +56,9 @@
     grid-template-columns: repeat(6, 1fr);
 }
 
-/* Medium: 5 columns (50 squares = 5x10) */
+/* Medium: 7 columns (49 squares = 7x7) */
 .game-board.medium {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(7, 1fr);
 }
 
 /* Hard: 10 columns (100 squares = 10x10) */

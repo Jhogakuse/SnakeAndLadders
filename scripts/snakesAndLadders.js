@@ -20,22 +20,22 @@ const BOARD_CONFIG = {
         ]
     },
     medium: {
-        maxSquares: 50,
-        cols: 5,
-        rows: 10,
+        maxSquares: 49,
+        cols: 7,
+        rows: 7,
         snakes: [
             { head: 17, tail: 15 },  // 2 squares down
             { head: 25, tail: 22 },  // 3 squares down
             { head: 35, tail: 30 },  // 5 squares down
-            { head: 48, tail: 41 },  // 7 squares down
-            { head: 30, tail: 22 }   // 8 squares down
+            { head: 43, tail: 38 },  // 5 squares down
+            { head: 47, tail: 40 }   // 7 squares down
         ],
         ladders: [
             { bottom: 2, top: 4 },    // 2 squares up
             { bottom: 7, top: 10 },   // 3 squares up
             { bottom: 18, top: 23 },  // 5 squares up
             { bottom: 37, top: 44 },  // 7 squares up
-            { bottom: 42, top: 50 }   // 8 squares up
+            { bottom: 42, top: 48 }   // 6 squares up
         ]
     },
     hard: {
