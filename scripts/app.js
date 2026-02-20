@@ -160,10 +160,9 @@ class SnakeAndLaddersApp {
         game.board.render('game-board');
 
         // Update board info
-        const boardInfo = game.getBoardInfo();
         const difficultyText = game.difficulty.charAt(0).toUpperCase() + game.difficulty.slice(1);
         this.difficultyDisplay.textContent = `📊 Difficulty: ${difficultyText}`;
-        this.boardSizeDisplay.textContent = `📏 Size: ${boardInfo.dimensions.gridSize} (${game.maxSquares} squares)`;
+        this.boardSizeDisplay.textContent = `📏 Size: ${game.maxSquares}`;
 
         // Switch screens
         this.settingsScreen.classList.remove('active');
@@ -200,8 +199,10 @@ class SnakeAndLaddersApp {
      */
     goBackToSettings() {
         this.boardScreen.classList.remove('active');
+        this.gameplayScreen.classList.remove('active');
+        this.winScreen.style.display = 'none';
         this.settingsScreen.classList.add('active');
-        game.resetGame();
+        // game.resetGame();
     }
 
     /**
