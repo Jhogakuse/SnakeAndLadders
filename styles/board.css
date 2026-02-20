@@ -1,0 +1,310 @@
+/* Board Screen Styles */
+
+.board-container {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: var(--shadow-lg);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.board-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.board-header h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.board-info {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Board Content */
+.board-content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 30px;
+    align-items: start;
+    margin-bottom: 30px;
+}
+
+/* Game Board */
+.game-board {
+    display: grid;
+    gap: 2px;
+    background-color: #e5e7eb;
+    padding: 10px;
+    border: 3px solid var(--primary-color);
+    border-radius: 12px;
+    aspect-ratio: 1;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Easy: 6 columns (30 squares = 6x5) */
+.game-board.easy {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+/* Medium: 10 columns (50 squares = 10x5) */
+.game-board.medium {
+    grid-template-columns: repeat(10, 1fr);
+}
+
+/* Hard: 10 columns (100 squares = 10x10) */
+.game-board.hard {
+    grid-template-columns: repeat(10, 1fr);
+}
+
+/* Board Square */
+.square {
+    aspect-ratio: 1;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: visible;
+    min-height: 40px;
+}
+
+.square:hover {
+    box-shadow: inset 0 0 0 2px var(--primary-color);
+}
+
+.square-number {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    position: absolute;
+    top: 3px;
+    right: 3px;
+}
+
+/* Snake Square */
+.square.snake {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-color: #f87171;
+}
+
+.square.snake::before {
+    content: '🐍';
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+}
+
+/* Ladder Square */
+.square.ladder {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    border-color: #86efac;
+}
+
+.square.ladder::before {
+    content: '🪜';
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+}
+
+/* Normal Square */
+.square:not(.snake):not(.ladder) {
+    background-color: white;
+}
+
+/* Board Legend */
+.board-legend {
+    background-color: var(--light-bg);
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 200px;
+}
+
+.board-legend h3 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    border-left: 4px solid var(--border-color);
+}
+
+.legend-item:last-child {
+    margin-bottom: 0;
+}
+
+.legend-snake {
+    font-size: 1.5rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.legend-snake::before {
+    content: '🐍';
+}
+
+.legend-snake {
+    color: #f87171;
+}
+
+.legend-ladder {
+    font-size: 1.5rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.legend-ladder::before {
+    content: '🪜';
+}
+
+.legend-ladder {
+    color: #86efac;
+}
+
+.legend-item label {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-color);
+}
+
+.game-controls .btn {
+    flex: 1;
+    max-width: 250px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .board-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .board-legend {
+        display: flex;
+        gap: 20px;
+        min-width: unset;
+    }
+
+    .board-legend h3 {
+        display: none;
+    }
+
+    .legend-item {
+        flex: 1;
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .board-container {
+        padding: 20px;
+    }
+
+    .board-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .board-info {
+        flex-direction: column;
+        gap: 10px;
+        font-size: 0.95rem;
+    }
+
+    .game-board {
+        max-width: 100%;
+    }
+
+    .square {
+        font-size: 0.75rem;
+    }
+
+    .square-number {
+        font-size: 0.6rem;
+        top: 2px;
+        right: 2px;
+    }
+
+    .square.snake::before,
+    .square.ladder::before {
+        font-size: 1.2rem;
+    }
+
+    .game-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .game-controls .btn {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .board-container {
+        padding: 15px;
+    }
+
+    .board-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .board-info {
+        font-size: 0.85rem;
+    }
+
+    .game-board {
+        padding: 8px;
+        gap: 1px;
+    }
+
+    .square {
+        font-size: 0.6rem;
+        border-radius: 3px;
+    }
+
+    .square.snake::before,
+    .square.ladder::before {
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+
+    .board-legend {
+        padding: 15px;
+    }
+
+    .legend-item {
+        padding: 8px;
+        gap: 8px;
+    }
+}
