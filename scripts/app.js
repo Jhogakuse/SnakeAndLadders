@@ -160,10 +160,9 @@ class SnakeAndLaddersApp {
         game.board.render('game-board');
 
         // Update board info
-        const boardInfo = game.getBoardInfo();
         const difficultyText = game.difficulty.charAt(0).toUpperCase() + game.difficulty.slice(1);
         this.difficultyDisplay.textContent = `📊 Difficulty: ${difficultyText}`;
-        this.boardSizeDisplay.textContent = `📏 Size: ${boardInfo.dimensions.gridSize} (${game.maxSquares} squares)`;
+        this.boardSizeDisplay.textContent = `📏 Size: ${game.maxSquares}`;
 
         // Switch screens
         this.settingsScreen.classList.remove('active');
@@ -200,8 +199,10 @@ class SnakeAndLaddersApp {
      */
     goBackToSettings() {
         this.boardScreen.classList.remove('active');
+        this.gameplayScreen.classList.remove('active');
+        this.winScreen.style.display = 'none';
         this.settingsScreen.classList.add('active');
-        game.resetGame();
+        // game.resetGame();
     }
 
     /**
@@ -229,14 +230,44 @@ class SnakeAndLaddersApp {
 
                 if (square.isSnake) {
                     squareElement.classList.add('snake');
+                    const snakePairId = app.getSnakePairId(square.number, game.difficulty);
+                    if (snakePairId) {
+                        squareElement.dataset.snakePair = snakePairId;
+                    }
                 } else if (square.isLadder) {
                     squareElement.classList.add('ladder');
+                    const ladderPairId = app.getLadderPairId(square.number, game.difficulty);
+                    if (ladderPairId) {
+                        squareElement.dataset.ladderPair = ladderPairId;
+                    }
+                } else {
+                    // Check if this square is a snake destination
+                    const snakePairId = app.getSnakeTailPairId(square.number, game.difficulty);
+                    if (snakePairId) {
+                        squareElement.classList.add('snake-destination');
+                        squareElement.dataset.snakePair = snakePairId;
+                    } else {
+                        // Check if this square is a ladder destination
+                        const ladderPairId = app.getLadderTopPairId(square.number, game.difficulty);
+                        if (ladderPairId) {
+                            squareElement.classList.add('ladder-destination');
+                            squareElement.dataset.ladderPair = ladderPairId;
+                        }
+                    }
                 }
 
                 const numberSpan = document.createElement('span');
                 numberSpan.className = 'square-number';
                 numberSpan.textContent = square.number;
                 squareElement.appendChild(numberSpan);
+
+                // Add destination number if snake or ladder
+                if (square.destination) {
+                    const destSpan = document.createElement('span');
+                    destSpan.className = 'destination-number';
+                    destSpan.textContent = square.destination;
+                    squareElement.appendChild(destSpan);
+                }
 
                 // Add token placeholders for each player inside the square
                 game.playerManager.getAllPlayers().forEach(player => {
@@ -321,8 +352,10 @@ class SnakeAndLaddersApp {
             }
 
             // Check for winner
-            if (moveResult.isWinner) {
+            console.log(`Winner check - Final Position: ${moveResult.finalPosition}, Max Squares: ${game.maxSquares}, isWinner: ${moveResult.isWinner}`);
+            if (moveResult.isWinner || moveResult.finalPosition === game.maxSquares) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
+                console.log(`🏆 Winner detected: ${moveResult.player.name}!`);
                 this.showWinScreen(moveResult.player);
                 return;
             }
@@ -554,6 +587,46 @@ class SnakeAndLaddersApp {
             // Initialize with default
             this.updatePlayerNameInputs(2);
         }
+    }
+
+    /**
+     * Get snake pair identifier for styling
+     */
+    getSnakePairId(squareNumber, difficulty) {
+        const config = BOARD_CONFIG[difficulty];
+        const snakes = config.snakes;
+        const snakeIndex = snakes.findIndex(s => s.head === squareNumber);
+        return snakeIndex >= 0 ? `snake-${snakeIndex}` : '';
+    }
+
+    /**
+     * Get snake tail (destination) pair identifier for styling
+     */
+    getSnakeTailPairId(squareNumber, difficulty) {
+        const config = BOARD_CONFIG[difficulty];
+        const snakes = config.snakes;
+        const snakeIndex = snakes.findIndex(s => s.tail === squareNumber);
+        return snakeIndex >= 0 ? `snake-${snakeIndex}` : '';
+    }
+
+    /**
+     * Get ladder pair identifier for styling
+     */
+    getLadderPairId(squareNumber, difficulty) {
+        const config = BOARD_CONFIG[difficulty];
+        const ladders = config.ladders;
+        const ladderIndex = ladders.findIndex(l => l.bottom === squareNumber);
+        return ladderIndex >= 0 ? `ladder-${ladderIndex}` : '';
+    }
+
+    /**
+     * Get ladder top (destination) pair identifier for styling
+     */
+    getLadderTopPairId(squareNumber, difficulty) {
+        const config = BOARD_CONFIG[difficulty];
+        const ladders = config.ladders;
+        const ladderIndex = ladders.findIndex(l => l.top === squareNumber);
+        return ladderIndex >= 0 ? `ladder-${ladderIndex}` : '';
     }
 
     /**
