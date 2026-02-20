@@ -229,14 +229,30 @@ class SnakeAndLaddersApp {
 
                 if (square.isSnake) {
                     squareElement.classList.add('snake');
+                    const snakePairId = app.getSnakePairId(square.number, game.difficulty);
+                    if (snakePairId) {
+                        squareElement.dataset.snakePair = snakePairId;
+                    }
                 } else if (square.isLadder) {
                     squareElement.classList.add('ladder');
+                    const ladderPairId = app.getLadderPairId(square.number, game.difficulty);
+                    if (ladderPairId) {
+                        squareElement.dataset.ladderPair = ladderPairId;
+                    }
                 }
 
                 const numberSpan = document.createElement('span');
                 numberSpan.className = 'square-number';
                 numberSpan.textContent = square.number;
                 squareElement.appendChild(numberSpan);
+
+                // Add destination number if snake or ladder
+                if (square.destination) {
+                    const destSpan = document.createElement('span');
+                    destSpan.className = 'destination-number';
+                    destSpan.textContent = square.destination;
+                    squareElement.appendChild(destSpan);
+                }
 
                 // Add token placeholders for each player inside the square
                 game.playerManager.getAllPlayers().forEach(player => {
@@ -554,6 +570,26 @@ class SnakeAndLaddersApp {
             // Initialize with default
             this.updatePlayerNameInputs(2);
         }
+    }
+
+    /**
+     * Get snake pair identifier for styling
+     */
+    getSnakePairId(squareNumber, difficulty) {
+        const config = BOARD_CONFIG[difficulty];
+        const snakes = config.snakes;
+        const snakeIndex = snakes.findIndex(s => s.head === squareNumber);
+        return snakeIndex >= 0 ? `snake-${snakeIndex}` : '';
+    }
+
+    /**
+     * Get ladder pair identifier for styling
+     */
+    getLadderPairId(squareNumber, difficulty) {
+        const config = BOARD_CONFIG[difficulty];
+        const ladders = config.ladders;
+        const ladderIndex = ladders.findIndex(l => l.bottom === squareNumber || l.top === squareNumber);
+        return ladderIndex >= 0 ? `ladder-${ladderIndex}` : '';
     }
 
     /**
