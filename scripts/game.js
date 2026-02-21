@@ -58,6 +58,7 @@ class SnakeAndLaddersGame {
             throw new Error('No current player');
         }
 
+        let previousPosition = player.currentPosition;
         let newPosition = player.currentPosition + diceValue;
 
         // Handle bounce-back if moving beyond max squares
@@ -101,7 +102,7 @@ class SnakeAndLaddersGame {
         return {
             player: player,
             diceValue: diceValue,
-            previousPosition: player.currentPosition - diceValue,
+            previousPosition: previousPosition,
             newPosition: newPosition,
             wouldBePosition: wouldBePosition,
             finalPosition: finalPosition,
