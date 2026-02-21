@@ -80,9 +80,8 @@
     align-items: center;
     cursor: pointer;
     z-index: 10;
-    left: 0;
-    top: 0;
-    transition: none;
+    /* Remove default left/top to allow dynamic positioning */
+    transition: transform 0.2s ease;
 }
 
 .token-inner {
@@ -211,6 +210,11 @@
 
 .roll-message.ladder {
     color: #10b981;
+    font-weight: 600;
+}
+
+.roll-message.bounce {
+    color: #f59e0b;
     font-weight: 600;
 }
 

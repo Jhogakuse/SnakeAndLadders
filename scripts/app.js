@@ -270,11 +270,17 @@ class SnakeAndLaddersApp {
                 }
 
                 // Add token placeholders for each player inside the square
-                game.playerManager.getAllPlayers().forEach(player => {
+                const allPlayers = game.playerManager.getAllPlayers();
+                allPlayers.forEach((player, index) => {
                     const tokenDiv = document.createElement('div');
                     tokenDiv.id = `game-board-${square.number}-${player.id}`;
                     tokenDiv.className = 'player-token';
                     tokenDiv.style.display = 'none'; // Hidden by default
+
+                    // Calculate dynamic position within square based on player index
+                    const position = this.calculateTokenPosition(index, allPlayers.length);
+                    tokenDiv.style.left = position.left;
+                    tokenDiv.style.top = position.top;
 
                     tokenDiv.innerHTML = `
                         <div class="token-inner" style="background-color: ${player.color}">
@@ -292,12 +298,12 @@ class SnakeAndLaddersApp {
             tokenManager.initializeTokens(game.playerManager.getAllPlayers());
 
             // Show tokens at starting position (square 1)
-            const startingSquare = document.getElementById('square-1');
-            if (startingSquare) {
-                game.playerManager.getAllPlayers().forEach(player => {
-                    tokenManager.showTokenAtSquare(player.id, 1);
-                });
-            }
+            // const startingSquare = document.getElementById('square-1');
+            // if (startingSquare) {
+            //     game.playerManager.getAllPlayers().forEach(player => {
+            //         tokenManager.showTokenAtSquare(player.id, 1);
+            //     });
+            // }
 
             // Switch to gameplay screen
             this.boardScreen.classList.remove('active');
@@ -335,9 +341,10 @@ class SnakeAndLaddersApp {
             // Update display
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            if (!moveResult.hasMoved) {
-                this.rollMessage.textContent = `Cannot move beyond finish! Stay at ${moveResult.player.currentPosition}`;
-                this.rollMessage.className = 'roll-message';
+            // All moves are now valid with bounce-back logic
+            if (moveResult.bouncedBack) {
+                this.rollMessage.textContent = `🔄 Bounce back! From ${moveResult.previousPosition} to ${moveResult.finalPosition}`;
+                this.rollMessage.className = 'roll-message bounce';
             } else if (moveResult.hasLanded) {
                 if (moveResult.movedBy === 'snake') {
                     this.rollMessage.textContent = `🐍 Snake! Moved from ${moveResult.newPosition} to ${moveResult.finalPosition}`;
@@ -635,6 +642,106 @@ class SnakeAndLaddersApp {
     clearSavedData() {
         localStorage.removeItem('snakeLaddersSettings');
         location.reload();
+    }
+
+    /**
+     * Calculate dynamic position for token within a square
+     * Positions tokens in a circle or grid pattern to avoid overlap
+     */
+    calculateTokenPosition(playerIndex, totalPlayers) {
+        const squareSize = 60; // Approximate square size in pixels
+        const tokenSize = 40; // Token size in pixels
+        const padding = 10; // Padding from square edges
+        
+        // Available space for positioning
+        const availableSpace = squareSize - (padding * 2) - tokenSize;
+        
+        if (totalPlayers === 1) {
+            // Single player - center the token
+            return {
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)'
+            };
+        } else if (totalPlayers <= 4) {
+            // 2-4 players - position in corners or cardinal points
+            return this.calculateCardinalPosition(playerIndex, totalPlayers, squareSize, tokenSize);
+        } else if (totalPlayers <= 6) {
+            // 5-6 players - position in hexagon pattern
+            return this.calculateHexagonPosition(playerIndex, totalPlayers, squareSize, tokenSize);
+        } else {
+            // 7+ players - position in grid pattern
+            return this.calculateGridPosition(playerIndex, totalPlayers, squareSize, tokenSize);
+        }
+    }
+
+    /**
+     * Calculate positions for 2-4 players in cardinal directions
+     */
+    calculateCardinalPosition(index, total, squareSize, tokenSize) {
+        let positions = [];
+        
+        if (total === 2) {
+            positions = [
+                { left: '15%', top: '15%' },  // Top-left
+                { left: '65%', top: '65%' }   // Bottom-right
+            ];
+        } else if (total === 3) {
+            positions = [
+                { left: '15%', top: '15%' },  // Top-left
+                { left: '65%', top: '15%' },  // Top-right
+                { left: '40%', top: '65%' }   // Bottom-center
+            ];
+        } else if (total === 4) {
+            positions = [
+                { left: '15%', top: '15%' },  // Top-left
+                { left: '65%', top: '15%' },  // Top-right
+                { left: '15%', top: '65%' },  // Bottom-left
+                { left: '65%', top: '65%' }   // Bottom-right
+            ];
+        }
+        
+        return positions[index] || { left: '40%', top: '40%' };
+    }
+
+    /**
+     * Calculate positions for 5-6 players in hexagon pattern
+     */
+    calculateHexagonPosition(index, total, squareSize, tokenSize) {
+        const centerX = 40; // 40% from left
+        const centerY = 40; // 40% from top
+        const radius = 20;   // 20% radius
+        
+        const angle = (index * 2 * Math.PI) / total;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        
+        return {
+            left: `${x}%`,
+            top: `${y}%`,
+            transform: 'translate(-50%, -50%)'
+        };
+    }
+
+    /**
+     * Calculate positions for 7+ players in grid pattern
+     */
+    calculateGridPosition(index, total, squareSize, tokenSize) {
+        const cols = Math.ceil(Math.sqrt(total));
+        const row = Math.floor(index / cols);
+        const col = index % cols;
+        
+        const cellWidth = 80 / cols; // 80% of square width divided by columns
+        const cellHeight = 80 / cols; // 80% of square height divided by rows
+        
+        const left = 10 + (col * cellWidth) + (cellWidth / 2); // 10% padding + position + center
+        const top = 10 + (row * cellHeight) + (cellHeight / 2); // 10% padding + position + center
+        
+        return {
+            left: `${left}%`,
+            top: `${top}%`,
+            transform: 'translate(-50%, -50%)'
+        };
     }
 }
 
