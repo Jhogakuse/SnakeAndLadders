@@ -19,7 +19,7 @@ class TokenManager {
             // Hide all token instances of this player initially
             this.hideAllTokensOfPlayer(player.id);
             // Show only token at square 1
-            this.showTokenAtSquare(player.id, 1);
+            //this.showTokenAtSquare(player.id, 1);
         });
         console.log('Tokens initialized');
     }
@@ -53,16 +53,67 @@ class TokenManager {
     }
 
     /**
-     * Move player token from current square to target square
+     * Move player token from current square to target square with step-by-step animation
      */
-    moveToken(playerId, targetSquare, board) {
-        return new Promise((resolve) => {
-            // Simply show token at target square
-            this.showTokenAtSquare(playerId, targetSquare);
-            
-            // Resolve immediately (instant movement, no animation)
-            resolve();
-        });
+    async moveToken(playerId, targetSquare, board, moveResult = null) {
+        const currentSquare = this.playerPositions[playerId] || 1;
+        
+        // If moveResult is provided, use it to calculate the proper path
+        let path;
+        if (moveResult && moveResult.bouncedBack) {
+            path = this.calculateBounceBackPath(currentSquare, moveResult, board.squares.length);
+        } else {
+            path = this.calculateSimplePath(currentSquare, targetSquare);
+        }
+        
+        // Animate through each step in the path
+        for (let i = 0; i < path.length; i++) {
+            this.showTokenAtSquare(playerId, path[i]);
+            await new Promise(resolve => setTimeout(resolve, 500)); // 500ms delay between steps
+        }
+    }
+
+    /**
+     * Calculate bounce-back path showing forward then backward movement
+     */
+    calculateBounceBackPath(currentSquare, moveResult, maxSquares) {
+        const path = [currentSquare];
+        
+        // Show forward movement to would-be position (through maxSquares)
+        for (let i = currentSquare + 1; i <= moveResult.wouldBePosition && i <= maxSquares; i++) {
+            path.push(i);
+        }
+        
+        // If would-be position exceeds maxSquares, show bounce-back
+        if (moveResult.wouldBePosition > maxSquares) {
+            // Show backward movement from maxSquares-1 to final position
+            for (let i = maxSquares - 1; i >= moveResult.finalPosition; i--) {
+                path.push(i);
+            }
+        }
+        
+        return path;
+    }
+
+    /**
+     * Calculate simple forward path
+     */
+    calculateSimplePath(fromSquare, toSquare) {
+        const path = [fromSquare];
+        
+        if (fromSquare < toSquare) {
+            // Forward movement
+            for (let i = fromSquare + 1; i <= toSquare; i++) {
+                path.push(i);
+            }
+        } else if (fromSquare > toSquare) {
+            // Backward movement (snake)
+            for (let i = fromSquare - 1; i >= toSquare; i--) {
+                path.push(i);
+            }
+        }
+        
+        return path;
     }
 
     /**

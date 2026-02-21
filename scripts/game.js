@@ -63,7 +63,7 @@ class SnakeAndLaddersGame {
         // Handle bounce-back if moving beyond max squares
         let actualMovement = diceValue;
         let bouncedBack = false;
-        const wouldBePosition = player.currentPosition; // Track position before bounce
+        const wouldBePosition = player.currentPosition + diceValue; // Track position before bounce
         
         if (newPosition > this.maxSquares) {
             // Calculate bounce-back: overshoot * 2, then go back that many squares
@@ -188,7 +188,9 @@ class SnakeAndLaddersGame {
         // Animate token movement
         await tokenManager.moveToken(
             moveResult.player.id,
-            moveResult.newPosition
+            moveResult.newPosition,
+            this.board,
+            moveResult
         );
 
         // If snake or ladder, animate effect
@@ -202,10 +204,12 @@ class SnakeAndLaddersGame {
         }
 
         // Update token position after all animations
-        await tokenManager.moveToken(
-            moveResult.player.id,
-            moveResult.finalPosition
-        );
+        // await tokenManager.moveToken(
+        //     moveResult.player.id,
+        //     moveResult.finalPosition,
+        //     this.board,
+        //     moveResult
+        // );
 
         return moveResult;
     }

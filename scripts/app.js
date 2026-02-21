@@ -292,12 +292,12 @@ class SnakeAndLaddersApp {
             tokenManager.initializeTokens(game.playerManager.getAllPlayers());
 
             // Show tokens at starting position (square 1)
-            const startingSquare = document.getElementById('square-1');
-            if (startingSquare) {
-                game.playerManager.getAllPlayers().forEach(player => {
-                    tokenManager.showTokenAtSquare(player.id, 1);
-                });
-            }
+            // const startingSquare = document.getElementById('square-1');
+            // if (startingSquare) {
+            //     game.playerManager.getAllPlayers().forEach(player => {
+            //         tokenManager.showTokenAtSquare(player.id, 1);
+            //     });
+            // }
 
             // Switch to gameplay screen
             this.boardScreen.classList.remove('active');
