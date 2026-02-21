@@ -61,7 +61,7 @@ class TokenManager {
         // If moveResult is provided, use it to calculate the proper path
         let path;
         if (moveResult && moveResult.bouncedBack) {
-            path = this.calculateBounceBackPath(currentSquare, moveResult, board.maxSquares);
+            path = this.calculateBounceBackPath(currentSquare, moveResult, board.squares.length);
         } else {
             path = this.calculateSimplePath(currentSquare, targetSquare);
         }
