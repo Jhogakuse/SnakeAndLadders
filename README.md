@@ -69,6 +69,7 @@ A fully-featured web-based implementation of classic Snake and Ladders board gam
 ### Phase 3: 🎨 Pending
 - [ ] Animations
 - [ ] Sound effects
+- [ ] Multiple language support
 
 ## 🎯 Key Features
 
