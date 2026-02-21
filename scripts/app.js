@@ -35,6 +35,15 @@ class SnakeAndLaddersApp {
         this.backHomeBtn = document.getElementById('back-home-btn');
         this.settingsBtn = document.getElementById('settings-btn');
 
+        // Dice mode elements
+        this.randomRollControls = document.getElementById('random-roll-controls');
+        this.manualRollControls = document.getElementById('manual-roll-controls');
+        this.manualDiceValue = document.getElementById('manual-dice-value');
+        this.manualRollBtn = document.getElementById('manual-roll-btn');
+
+        // Game state
+        this.diceMode = 'random';
+
         this.init();
     }
 
@@ -69,6 +78,7 @@ class SnakeAndLaddersApp {
 
         // Gameplay controls
         this.rollDiceBtn.addEventListener('click', () => this.handleDiceRoll());
+        this.manualRollBtn.addEventListener('click', () => this.handleManualRoll());
         this.restartGameBtn.addEventListener('click', () => this.restartCurrentGame());
         this.settingsBtn.addEventListener('click', () => this.pauseGameAndSettings());
 
@@ -123,6 +133,10 @@ class SnakeAndLaddersApp {
             // Get form values
             const numPlayers = parseInt(this.numPlayersInput.value);
             const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+            const diceMode = document.querySelector('input[name="dice-mode"]:checked').value;
+
+            // Store dice mode for gameplay
+            this.diceMode = diceMode;
 
             // Get player names
             const playerNames = [];
@@ -309,6 +323,9 @@ class SnakeAndLaddersApp {
             this.boardScreen.classList.remove('active');
             this.gameplayScreen.classList.add('active');
 
+            // Switch dice mode controls based on settings
+            this.switchDiceMode(this.diceMode);
+
             // Initialize game display
             this.updateGameDisplay();
             this.populateGameLog();
@@ -383,6 +400,89 @@ class SnakeAndLaddersApp {
             // Re-enable button
             this.rollDiceBtn.disabled = false;
             this.rollDiceBtn.textContent = 'ROLL DICE';
+        }
+    }
+
+    /**
+     * Switch dice mode controls
+     */
+    switchDiceMode(mode) {
+        // Hide all controls
+        this.randomRollControls.style.display = 'none';
+        this.manualRollControls.style.display = 'none';
+
+        // Show appropriate controls
+        switch (mode) {
+            case 'random':
+                this.randomRollControls.style.display = 'block';
+                break;
+            case 'manual':
+                this.manualRollControls.style.display = 'block';
+                break;
+        }
+    }
+
+    /**
+     * Handle manual dice roll
+     */
+    async handleManualRoll() {
+        const diceValue = parseInt(this.manualDiceValue.value);
+        
+        if (isNaN(diceValue) || diceValue < 1 || diceValue > 6) {
+            this.rollMessage.textContent = 'Please enter a valid number (1-6)';
+            this.rollMessage.className = 'roll-message error';
+            return;
+        }
+
+        // Disable controls during roll
+        this.manualRollBtn.disabled = true;
+        this.manualDiceValue.disabled = true;
+
+        try {
+            // Show the dice value
+            dice.setFinalDisplay(diceValue);
+            this.rollMessage.textContent = `Manual roll: ${diceValue}`;
+
+            // Perform animated move
+            const moveResult = await game.performAnimatedMove(diceValue);
+
+            // Update display
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // All moves are now valid with bounce-back logic
+            if (moveResult.bouncedBack) {
+                this.rollMessage.textContent = `🔄 Bounce back! From ${moveResult.player.currentPosition} to ${moveResult.finalPosition}`;
+                this.rollMessage.className = 'roll-message bounce';
+            } else if (moveResult.hasLanded) {
+                if (moveResult.movedBy === 'snake') {
+                    this.rollMessage.textContent = `🐍 Snake! Moved from ${moveResult.newPosition} to ${moveResult.finalPosition}`;
+                    this.rollMessage.className = 'roll-message snake';
+                } else {
+                    this.rollMessage.textContent = `🪜 Ladder! Climbed from ${moveResult.newPosition} to ${moveResult.finalPosition}`;
+                    this.rollMessage.className = 'roll-message ladder';
+                }
+            } else {
+                this.rollMessage.textContent = `Moved to square ${moveResult.finalPosition}`;
+                this.rollMessage.className = 'roll-message success';
+            }
+
+            // Check for winner
+            if (moveResult.isWinner) {
+                this.showWinnerScreen(moveResult.player);
+                return;
+            }
+
+            // Next turn
+            game.nextTurn();
+            this.updateGameDisplay();
+            this.populateGameLog();
+        } catch (error) {
+            console.error('Error during manual roll:', error);
+            this.rollMessage.textContent = 'Error during move!';
+        } finally {
+            // Re-enable controls
+            this.manualRollBtn.disabled = false;
+            this.manualDiceValue.disabled = false;
         }
     }
 

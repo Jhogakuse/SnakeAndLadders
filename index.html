@@ -82,6 +82,36 @@
                         </div>
                     </div>
 
+                    <!-- Dice Mode -->
+                    <div class="form-group">
+                        <label>Dice Mode:</label>
+                        <div class="dice-mode-options">
+                            <label class="radio-option">
+                                <input 
+                                    type="radio" 
+                                    name="dice-mode" 
+                                    value="random"
+                                    checked
+                                >
+                                <span class="dice-mode-label">
+                                    <strong>🎲 Random Roll</strong>
+                                    <small>Automatic random dice roll</small>
+                                </span>
+                            </label>
+                            <label class="radio-option">
+                                <input 
+                                    type="radio" 
+                                    name="dice-mode" 
+                                    value="manual"
+                                >
+                                <span class="dice-mode-label">
+                                    <strong>🔢 Manual Input</strong>
+                                    <small>Enter dice value manually</small>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
                     <!-- Buttons -->
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Start Game</button>
@@ -162,7 +192,28 @@
                             <div id="dice-display" class="dice-display">
                                 <div class="dice-face">?</div>
                             </div>
-                            <button id="roll-dice-btn" class="btn btn-primary btn-large">ROLL DICE</button>
+                            
+                            <!-- Random Roll Mode -->
+                            <div id="random-roll-controls" class="dice-controls">
+                                <button id="roll-dice-btn" class="btn btn-primary btn-large">ROLL DICE</button>
+                            </div>
+                            
+                            <!-- Manual Input Mode -->
+                            <div id="manual-roll-controls" class="dice-controls" style="display: none;">
+                                <div class="manual-dice-input">
+                                    <label for="manual-dice-value">Enter dice value (1-6):</label>
+                                    <input 
+                                        type="number" 
+                                        id="manual-dice-value" 
+                                        min="1" 
+                                        max="6" 
+                                        value="1"
+                                        class="dice-number-input"
+                                    >
+                                    <button id="manual-roll-btn" class="btn btn-primary">MOVE</button>
+                                </div>
+                            </div>
+                            
                             <div id="roll-message" class="roll-message"></div>
                         </div>
 
