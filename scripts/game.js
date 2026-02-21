@@ -188,7 +188,9 @@ class SnakeAndLaddersGame {
         // Animate token movement
         await tokenManager.moveToken(
             moveResult.player.id,
-            moveResult.newPosition
+            moveResult.newPosition,
+            this.board,
+            moveResult
         );
 
         // If snake or ladder, animate effect
@@ -204,7 +206,9 @@ class SnakeAndLaddersGame {
         // Update token position after all animations
         await tokenManager.moveToken(
             moveResult.player.id,
-            moveResult.finalPosition
+            moveResult.finalPosition,
+            this.board,
+            moveResult
         );
 
         return moveResult;
